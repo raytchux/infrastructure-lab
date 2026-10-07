@@ -41,8 +41,8 @@ encapsulation `802.1q`, statut `trunking`, VLAN natif 1, VLAN 1-1005 autorisés
 
 | Test | Attendu | Observé |
 |------|---------|---------|
-| PC1 -> PC5 (VLAN 10, autre switch) | répond | À COMPLÉTER |
-| PC1 -> PC6 (VLAN 10 -> 20) | échoue | À COMPLÉTER |
+| PC1 -> PC5 (VLAN 10, autre switch) | répond |
+| PC1 -> PC6 (VLAN 10 -> 20) | échoue |
 
 ## Incident rencontré
 Premier `show interfaces trunk` vide : le câble n'était pas sur les ports
