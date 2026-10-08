@@ -1,0 +1,52 @@
+! ============================================
+! Switch0 - Infrastructure Lab
+! VLAN, ports d'accès et trunk vers Switch1
+! ============================================
+!
+! VLAN (visibles via "show vlan brief")
+!   VLAN 10 : ADMIN / VLAN 20 : USERS / VLAN 30 : SERVERS
+!
+! Raccordements
+!   Fa0/1 : PC1 (ADMIN)
+!   Fa0/2 : PC2 (USERS)
+!   Fa0/3 : PC3 (SERVERS)
+!   Fa0/4 : PC4 (ADMIN, témoin positif)
+!   Fa0/5 : trunk vers Switch1 (Fa0/1)
+!
+! Autres ports non configurés (VLAN 1)
+! ============================================
+!
+no ip domain-lookup
+!
+vlan 10
+ name ADMIN
+vlan 20
+ name USERS
+vlan 30
+ name SERVERS
+!
+interface FastEthernet0/1
+ description PC1 - ADMIN
+ switchport access vlan 10
+ switchport mode access
+!
+interface FastEthernet0/2
+ description PC2 - USERS
+ switchport access vlan 20
+ switchport mode access
+!
+interface FastEthernet0/3
+ description PC3 - SERVERS
+ switchport access vlan 30
+ switchport mode access
+!
+interface FastEthernet0/4
+ description PC4 - ADMIN (temoin)
+ switchport access vlan 10
+ switchport mode access
+!
+interface FastEthernet0/5
+ description TRUNK vers Switch1
+ switchport mode trunk
+!
+end
