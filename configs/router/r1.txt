@@ -1,0 +1,31 @@
+! ============================================
+! R1 - Infrastructure Lab
+! Router-on-a-stick : une sous-interface par VLAN
+! ============================================
+!
+! Raccordement : Gig0/0 <-> Fa0/6 de Switch0 (trunk)
+! Gig0/1 et Gig0/2 : éteints (non utilisés)
+! ============================================
+!
+hostname R1
+no ip domain-lookup
+!
+interface GigabitEthernet0/0
+ no shutdown
+!
+interface GigabitEthernet0/0.10
+ description Gateway VLAN 10 ADMIN
+ encapsulation dot1Q 10
+ ip address 192.168.10.1 255.255.255.0
+!
+interface GigabitEthernet0/0.20
+ description Gateway VLAN 20 USERS
+ encapsulation dot1Q 20
+ ip address 192.168.20.1 255.255.255.0
+!
+interface GigabitEthernet0/0.30
+ description Gateway VLAN 30 SERVERS
+ encapsulation dot1Q 30
+ ip address 192.168.30.1 255.255.255.0
+!
+end

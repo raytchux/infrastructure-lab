@@ -49,4 +49,8 @@ interface FastEthernet0/5
  description TRUNK vers Switch1
  switchport mode trunk
 !
+interface FastEthernet0/6
+ description TRUNK vers R1
+ switchport mode trunk
+!
 end
