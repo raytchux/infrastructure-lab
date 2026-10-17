@@ -38,3 +38,12 @@ Domaine interne : `infra.local`
 | Attribution DHCP VLAN 20 (PC5) | OK |
 | `ping web.infra.local` | OK |
 | `nslookup web.infra.local` | OK |
+
+## Pool VLAN 40 (GUEST)
+
+| Pool | Réseau | Passerelle | DNS | Plage de départ | Max |
+|---|---|---|---|---|---|
+| VLAN40 | 192.168.40.0/24 | 192.168.40.1 | 192.168.30.10 | 192.168.40.100 | 100 |
+
+Relais DHCP (R1) : `ip helper-address 192.168.30.10` sur `Gig0/0.40`.
+Le VLAN 99 n'a pas de pool : équipements à IP fixe.
