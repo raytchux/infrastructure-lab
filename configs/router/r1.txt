@@ -10,23 +10,29 @@ interface GigabitEthernet0/0.10
  encapsulation dot1Q 10
  ip address 192.168.10.1 255.255.255.0
  ip helper-address 192.168.30.10
+ ip nat inside
 !
 interface GigabitEthernet0/0.20
  description Gateway VLAN 20 USERS
  encapsulation dot1Q 20
  ip address 192.168.20.1 255.255.255.0
  ip helper-address 192.168.30.10
+ ip nat inside
+ ip access-group USERS_IN in
 !
 interface GigabitEthernet0/0.30
  description Gateway VLAN 30 SERVERS
  encapsulation dot1Q 30
  ip address 192.168.30.1 255.255.255.0
+ ip access-group SERVERS_IN in
 !
 interface GigabitEthernet0/0.40
  description Gateway VLAN 40 GUEST
  encapsulation dot1Q 40
  ip address 192.168.40.1 255.255.255.0
  ip helper-address 192.168.30.10
+ ip nat inside
+ ip access-group GUEST_IN in
 !
 interface GigabitEthernet0/0.99
  description Gateway VLAN 99 MANAGEMENT
@@ -36,6 +42,7 @@ interface GigabitEthernet0/0.99
 interface GigabitEthernet0/1
  description Transit vers R2
  ip address 10.0.0.1 255.255.255.252
+ ip nat outside
  no shutdown
 !
 interface GigabitEthernet0/2
@@ -43,11 +50,41 @@ interface GigabitEthernet0/2
 !
 router ospf 1
  router-id 1.1.1.1
- network 192.168.10.0 0.0.0.255 area 0
- network 192.168.20.0 0.0.0.255 area 0
- network 192.168.30.0 0.0.0.255 area 0
- network 192.168.40.0 0.0.0.255 area 0
- network 192.168.99.0 0.0.0.255 area 0
+ log-adjacency-changes
  network 10.0.0.0 0.0.0.3 area 0
+!
+ip nat inside source list 1 interface GigabitEthernet0/1 overload
+!
+access-list 1 permit 192.168.20.0 0.0.0.255
+access-list 1 permit 192.168.10.0 0.0.0.255
+access-list 1 permit 192.168.40.0 0.0.0.255
+!
+ip access-list extended GUEST_IN
+ permit udp any eq bootpc host 255.255.255.255 eq bootps
+ permit udp any any eq bootps
+ permit udp 192.168.40.0 0.0.0.255 host 192.168.30.10 eq domain
+ deny ip 192.168.40.0 0.0.0.255 192.168.10.0 0.0.0.255
+ deny ip 192.168.40.0 0.0.0.255 192.168.20.0 0.0.0.255
+ deny ip 192.168.40.0 0.0.0.255 192.168.30.0 0.0.0.255
+ deny ip 192.168.40.0 0.0.0.255 192.168.99.0 0.0.0.255
+ permit ip 192.168.40.0 0.0.0.255 any
+!
+ip access-list extended USERS_IN
+ permit udp any eq bootpc host 255.255.255.255 eq bootps
+ permit udp any any eq bootps
+ permit udp 192.168.20.0 0.0.0.255 host 192.168.30.10 eq domain
+ permit tcp 192.168.20.0 0.0.0.255 host 192.168.30.10 eq www
+ permit tcp 192.168.20.0 0.0.0.255 host 192.168.30.10 eq 443
+ deny ip 192.168.20.0 0.0.0.255 192.168.10.0 0.0.0.255
+ deny ip 192.168.20.0 0.0.0.255 192.168.99.0 0.0.0.255
+ deny ip 192.168.20.0 0.0.0.255 192.168.30.0 0.0.0.255
+ permit ip 192.168.20.0 0.0.0.255 any
+!
+ip access-list extended SERVERS_IN
+ permit udp host 192.168.30.10 eq bootps any eq bootps
+ permit udp 192.168.30.0 0.0.0.255 eq domain any
+ permit tcp 192.168.30.0 0.0.0.255 any established
+ permit icmp 192.168.30.0 0.0.0.255 any echo-reply
+ deny ip 192.168.30.0 0.0.0.255 any
 !
 end
