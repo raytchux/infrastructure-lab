@@ -70,16 +70,3 @@ Appliqué sur les ports d'accès des PC, jamais sur les trunks ni sur le port du
 | Branchement d'un second PC sur SW0 Fa0/1 | Port en err-disabled (Secure-shutdown) | OK |
 | Réactivation (shutdown puis no shutdown) après remise de PC0 | Port Secure-up | OK |
 
-## DHCP snooping
-
-VLAN protégés : 10, 20, 30, 40. L'option 82 est désactivée (`no ip dhcp snooping information option`) pour ne pas perturber le relais DHCP de R1.
-
-| Switch | Ports de confiance | Rôle |
-|---|---|---|
-| SW0 | Fa0/5, Fa0/6 | Trunk vers SW1, trunk vers R1 |
-| SW1 | Fa0/1, Fa0/4 | Trunk vers SW0, serveur DHCP |
-
-| Test | Attendu | Résultat |
-|---|---|---|
-| Client DHCP des VLAN 20 et 40 | Obtient une IP | OK |
-| `show ip dhcp snooping binding` | Entrée IP / MAC / port / VLAN | OK |
