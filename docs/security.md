@@ -70,3 +70,23 @@ Appliqué sur les ports d'accès des PC, jamais sur les trunks ni sur le port du
 | Branchement d'un second PC sur SW0 Fa0/1 | Port en err-disabled (Secure-shutdown) | OK |
 | Réactivation (shutdown puis no shutdown) après remise de PC0 | Port Secure-up | OK |
 
+
+## Administration à distance (SSH)
+
+Telnet est désactivé : seules les connexions SSH version 2 sont acceptées sur les lignes vty, avec authentification par compte local. L'accès n'est possible que depuis le VLAN ADMIN : les ACL USERS_IN et GUEST_IN bloquent le VLAN 99.
+
+| Équipement | IP de management | Interface |
+|---|---|---|
+| R1 | 192.168.99.1 | Gig0/0.99 |
+| SW0 | 192.168.99.2 | Vlan99 |
+| SW1 | 192.168.99.3 | Vlan99 |
+
+Passerelle des switchs : 192.168.99.1. Clés RSA générées sur chaque équipement (domaine infra.local). Les comptes et mots de passe ne sont pas versionnés.
+
+| Test | Attendu | Résultat |
+|---|---|---|
+| `show ip ssh` sur R1 et SW1 | SSH Enabled, version 2.0 | OK |
+| SSH depuis PC0 (ADMIN) vers R1 | Connexion | OK |
+| SSH depuis PC0 (ADMIN) vers SW0 | Connexion | OK |
+| SSH depuis PC0 (ADMIN) vers SW1 | Connexion | OK |
+| SSH depuis PC5 (USERS) vers R1 | Refusé (USERS_IN) | OK |

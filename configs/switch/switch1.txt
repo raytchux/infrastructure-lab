@@ -1,5 +1,9 @@
 hostname SW1
 no ip domain-lookup
+ip domain-name infra.local
+ip ssh version 2
+!
+! Compte local "admin" : non versionné
 !
 vlan 10
  name ADMIN
@@ -16,24 +20,38 @@ interface FastEthernet0/1
  description TRUNK vers SW0
  switchport mode trunk
 !
-interface FastEthernet0/2
- description PC5 - ADMIN
- switchport access vlan 10
+interface range FastEthernet0/2 - 3 , FastEthernet0/5
  switchport mode access
+ switchport port-security
+ switchport port-security maximum 1
+ switchport port-security mac-address sticky
+ switchport port-security violation shutdown
+!
+interface FastEthernet0/2
+ description PC4 - ADMIN
+ switchport access vlan 10
 !
 interface FastEthernet0/3
- description PC6 - USERS
+ description PC5 - USERS
  switchport access vlan 20
- switchport mode access
 !
 interface FastEthernet0/4
  description Serveur DHCP/DNS
- switchport access vlan 30
  switchport mode access
+ switchport access vlan 30
 !
 interface FastEthernet0/5
- description PC invite GUEST
+ description PC6 - GUEST
  switchport access vlan 40
- switchport mode access
+!
+interface Vlan99
+ description Management
+ ip address 192.168.99.3 255.255.255.0
+!
+ip default-gateway 192.168.99.1
+!
+line vty 0 15
+ login local
+ transport input ssh
 !
 end

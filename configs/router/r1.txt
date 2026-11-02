@@ -1,9 +1,13 @@
 hostname R1
 no ip domain-lookup
+ip domain-name infra.local
+ip ssh version 2
+!
+! Compte local "admin" : non versionné
 !
 interface GigabitEthernet0/0
  description Trunk vers SW0 Fa0/6
- no shutdown
+ no ip address
 !
 interface GigabitEthernet0/0.10
  description Gateway VLAN 10 ADMIN
@@ -43,9 +47,9 @@ interface GigabitEthernet0/1
  description Transit vers R2
  ip address 10.0.0.1 255.255.255.252
  ip nat outside
- no shutdown
 !
 interface GigabitEthernet0/2
+ no ip address
  shutdown
 !
 router ospf 1
@@ -86,5 +90,9 @@ ip access-list extended SERVERS_IN
  permit tcp 192.168.30.0 0.0.0.255 any established
  permit icmp 192.168.30.0 0.0.0.255 any echo-reply
  deny ip 192.168.30.0 0.0.0.255 any
+!
+line vty 0 4
+ login local
+ transport input ssh
 !
 end
