@@ -54,3 +54,32 @@ Les règles DHCP et DNS précèdent les `deny` du VLAN 30 : la première règle 
 | SERVERS_IN | permit tcp established | 3 |
 | SERVERS_IN | permit icmp echo-reply | 2 |
 | SERVERS_IN | deny ip | 7 |
+
+## Port security
+
+Appliqué sur les ports d'accès des PC, jamais sur les trunks ni sur le port du serveur.
+
+| Switch | Ports | Maximum | Apprentissage | Violation |
+|---|---|---|---|---|
+| SW0 | Fa0/1 à Fa0/4 | 1 | sticky | shutdown |
+| SW1 | Fa0/2, Fa0/3, Fa0/5 | 1 | sticky | shutdown |
+
+| Test | Attendu | Résultat |
+|---|---|---|
+| Apprentissage de la MAC de chaque PC | 1 MAC par port (SecureSticky) | OK |
+| Branchement d'un second PC sur SW0 Fa0/1 | Port en err-disabled (Secure-shutdown) | OK |
+| Réactivation (shutdown puis no shutdown) après remise de PC0 | Port Secure-up | OK |
+
+## DHCP snooping
+
+VLAN protégés : 10, 20, 30, 40. L'option 82 est désactivée (`no ip dhcp snooping information option`) pour ne pas perturber le relais DHCP de R1.
+
+| Switch | Ports de confiance | Rôle |
+|---|---|---|
+| SW0 | Fa0/5, Fa0/6 | Trunk vers SW1, trunk vers R1 |
+| SW1 | Fa0/1, Fa0/4 | Trunk vers SW0, serveur DHCP |
+
+| Test | Attendu | Résultat |
+|---|---|---|
+| Client DHCP des VLAN 20 et 40 | Obtient une IP | OK |
+| `show ip dhcp snooping binding` | Entrée IP / MAC / port / VLAN | OK |
