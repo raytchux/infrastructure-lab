@@ -90,3 +90,18 @@ Passerelle des switchs : 192.168.99.1. Clés RSA générées sur chaque équipem
 | SSH depuis PC0 (ADMIN) vers SW0 | Connexion | OK |
 | SSH depuis PC0 (ADMIN) vers SW1 | Connexion | OK |
 | SSH depuis PC5 (USERS) vers R1 | Refusé (USERS_IN) | OK |
+
+## DHCP snooping et DAI
+
+VLAN protégés : snooping sur 10, 20, 30 et 40 ; DAI sur 10, 20 et 40 (le VLAN 30, serveur en IP statique, est exclu). L'option 82 est désactivée (`no ip dhcp snooping information option`) pour ne pas perturber le relais DHCP de R1. Les PC des VLAN inspectés sont en DHCP, afin de figurer dans la table de snooping.
+
+| Switch | Ports de confiance (snooping) | Ports de confiance (DAI) |
+|---|---|---|
+| SW0 | Fa0/5, Fa0/6 | Fa0/5, Fa0/6 |
+| SW1 | Fa0/1, Fa0/4 | Fa0/1 |
+
+| Test | Résultat |
+|---|---|
+| Clients DHCP : obtention d'une IP avec le snooping actif | OK |
+| Table de snooping remplie (`show ip dhcp snooping binding`) | OK |
+| Communication des clients avec le DAI actif | OK |

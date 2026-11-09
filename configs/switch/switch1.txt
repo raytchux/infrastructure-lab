@@ -16,9 +16,16 @@ vlan 40
 vlan 99
  name MANAGEMENT
 !
+ip dhcp snooping
+ip dhcp snooping vlan 10,20,30,40
+no ip dhcp snooping information option
+ip arp inspection vlan 10,20,40
+!
 interface FastEthernet0/1
  description TRUNK vers SW0
  switchport mode trunk
+ ip dhcp snooping trust
+ ip arp inspection trust
 !
 interface range FastEthernet0/2 - 3 , FastEthernet0/5
  switchport mode access
@@ -39,6 +46,7 @@ interface FastEthernet0/4
  description Serveur DHCP/DNS
  switchport mode access
  switchport access vlan 30
+ ip dhcp snooping trust
 !
 interface FastEthernet0/5
  description PC6 - GUEST
