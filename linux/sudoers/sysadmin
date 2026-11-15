@@ -1,0 +1,1 @@
+%sysadmin ALL=(root) /usr/bin/journalctl -u ssh
