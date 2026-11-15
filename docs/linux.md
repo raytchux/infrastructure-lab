@@ -41,3 +41,14 @@ Authentification par clé (ed25519), mot de passe désactivé, connexion root in
 | Connexion en root | Refusée |
 | Connexion en bob (hors AllowUsers) | Refusée |
 | `sshd -T` | passwordauthentication no, permitrootlogin no, allowusers user |
+
+## Nginx
+
+Serveur web installé depuis les dépôts Ubuntu, actif et activé au démarrage. Page servie depuis `/var/www/html/index.html`.
+
+| Test | Résultat |
+|---|---|
+| Écoute sur le port 80 (IPv4 et IPv6) | OK |
+| `curl http://192.168.30.20` depuis le PC | OK |
+| Service arrêté : connexion refusée | OK |
+| `nginx -t` détecte une erreur de syntaxe | OK (incident 08) |
