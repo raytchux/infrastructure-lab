@@ -44,11 +44,28 @@ Authentification par clé (ed25519), mot de passe désactivé, connexion root in
 
 ## Nginx
 
-Serveur web installé depuis les dépôts Ubuntu, actif et activé au démarrage. Page servie depuis `/var/www/html/index.html`.
+Serveur web installé depuis les dépôts Ubuntu, actif et activé au démarrage. Page servie depuis `/var/www/html/index.html` (copie : `linux/nginx/index.html`).
 
 | Test | Résultat |
 |---|---|
 | Écoute sur le port 80 (IPv4 et IPv6) | OK |
-| `curl http://192.168.30.20` depuis le PC | OK |
+| `curl http://192.168.30.20` depuis le poste d'administration | OK |
 | Service arrêté : connexion refusée | OK |
 | `nginx -t` détecte une erreur de syntaxe | OK (incident 08) |
+
+## Pare-feu (ufw)
+
+Politique : entrées refusées par défaut, sorties autorisées. Règles : `linux/ufw/rules.txt`.
+
+| Port | Source | Usage |
+|---|---|---|
+| 22/tcp | 192.168.30.1 | SSH, poste d'administration uniquement |
+| 80/tcp | toutes | HTTP |
+| 443/tcp | toutes | HTTPS (ouvert, Nginx n'écoute pas encore en TLS) |
+
+| Test | Résultat |
+|---|---|
+| SSH depuis le poste d'administration | OK |
+| `curl http://192.168.30.20` | OK |
+| `curl` vers le port 8080 (non autorisé) | Timeout |
+| Journal ufw : `[UFW BLOCK]` sur DPT=8080 depuis 192.168.30.1 | OK |

@@ -41,9 +41,10 @@ INTERNET (simulé : 172.16.0.0/24)
 - Utilisateurs, groupes, permissions, dossiers partagés (setgid)
 - sudo limité à des commandes précises
 - SSH par clé, mot de passe et login root désactivés
+- Nginx (page web interne) et pare-feu ufw (entrées refusées par défaut)
 
 ## En cours
-Nginx, pare-feu (ufw), fail2ban, scripts Bash, Wireshark, Active Directory, Ansible, supervision.
+fail2ban, scripts Bash, Wireshark, Active Directory, Ansible, supervision.
 
 ## Limites
 - Le réseau est simulé dans Packet Tracer ; le serveur Linux tourne dans VirtualBox. Les deux ne sont pas reliés : la VM reprend l'adressage du VLAN 30 à titre de cohérence.
@@ -58,6 +59,6 @@ Aucun mot de passe, hash, clé privée ou secret n'est versionné. Les comptes d
 |---|---|
 | docs/ | adressage, VLAN, services, routage, NAT, sécurité, Linux |
 | configs/ | configurations R1, R2, SW0, SW1 |
-| linux/ | netplan, sudoers, SSH |
+| linux/ | netplan, sudoers, SSH, Nginx, ufw |
 | incidents/ | incidents rencontrés (symptôme, cause, correction, prévention) |
 | topology/ | fichier Packet Tracer |

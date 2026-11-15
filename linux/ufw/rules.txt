@@ -1,0 +1,6 @@
+ufw default deny incoming
+ufw default allow outgoing
+ufw allow from 192.168.30.1 to any port 22 proto tcp
+ufw allow 80/tcp
+ufw allow 443/tcp
+ufw enable
